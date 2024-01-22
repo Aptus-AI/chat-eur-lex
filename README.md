@@ -5,6 +5,9 @@ This is the official repository of the Chat-EUR-Lex project funded by [NGI Searc
 Chat-EUR-Lex will be an AI-powered interface providing simplified explanations and ultimately fostering users' understanding of EU law. This information will be made available through an intuitive and easy-to-use conversational interface. This is how Chat-EUR-Lex will directly contribute to the realization of the EU's vision of promoting digital transformation, transparency and inclusion. 
 
 The technologies underlying Chat-EUR-Lex are state-of-the-art AI techniques, such as Chat-Based Large Language Models (Chat LLMs) and Retrieval Augmented Generation (RAG).
+The project is funded within the framework of the NGI Search project under grant agreement No 101069364 (NGI Search 2nd open call 2023).
+Duration: from September 2023 to September 2024.
+Chat-EUR-Lex project is realized by the Institute of Legal Informatics and Judicial Systems (IGSG-CNR) and the Aptus.AI startup.
 
 
 ## Roadmap
