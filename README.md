@@ -7,7 +7,9 @@ Chat-EUR-Lex will be an AI-powered interface providing simplified explanations a
 The technologies underlying Chat-EUR-Lex are state-of-the-art AI techniques, such as Chat-Based Large Language Models (Chat LLMs) and Retrieval Augmented Generation (RAG).
 
 The project is funded within the framework of the NGI Search project under grant agreement No 101069364 (NGI Search 2nd open call 2023).
+
 Duration: from September 2023 to September 2024.
+
 Chat-EUR-Lex project is realized by the Institute of Legal Informatics and Judicial Systems (IGSG-CNR) and the Aptus.AI startup.
 
 
