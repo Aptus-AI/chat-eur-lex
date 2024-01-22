@@ -10,7 +10,7 @@ The project is funded within the framework of the NGI Search project under grant
 
 Duration: from September 2023 to September 2024.
 
-Chat-EUR-Lex project is realized by the Institute of Legal Informatics and Judicial Systems (IGSG-CNR)(https://www.igsg.cnr.it/en/) and the Aptus.AI(https://www.aptus.ai/) startup.
+Chat-EUR-Lex project is realized by the [Institute of Legal Informatics and Judicial Systems (IGSG-CNR)](https://www.igsg.cnr.it/en/) and the [Aptus.AI](https://www.aptus.ai/) startup.
 
 
 ## Roadmap
