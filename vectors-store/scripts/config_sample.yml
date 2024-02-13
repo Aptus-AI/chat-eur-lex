@@ -1,0 +1,20 @@
+data_path: '[data_path]'
+
+embeddings:
+  class: OpenAIEmbeddings
+  kwargs:
+    openai_api_key: "[openai_api_key]"
+    model: "text-embedding-ada-002"
+
+vectorDB:
+  class: Qdrant
+  kwargs:
+    port: 6333
+    collection_name: chat-eur-lex
+
+splitter:
+  class: LineSplitter
+  kwargs:
+    chunk_size: 20
+    chunk_overlap: 5
+    separator: "\n"
