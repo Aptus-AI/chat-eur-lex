@@ -15,7 +15,7 @@ class Documents():
     def __init__(self) -> None:
         self.documents = []
 
-with open('config.yml', 'r') as file:
+with open('config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 chat = EurLexChat(config=config)
