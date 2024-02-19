@@ -29,14 +29,16 @@ def remove_doc(btn):
 
 
 def get_answer(message, history, session_id):
+    s = session_id
     if len(history) == 0:
         docs.documents = chat.get_relevant_docs(question=message)
-    result = chat.get_answer(session_id, message, docs.documents)
+        s = generate_random_string(7)
+    result = chat.get_answer(s, message, docs.documents)
     history.append((message, result.answer))
     if result.new_documents:
         docs.documents = result.new_documents
     accordions, list_texts = set_new_docs_ui(docs.documents)
-    return ['', history, gr.Column(scale=1, visible=True), *accordions, *list_texts]
+    return ['', history, gr.Column(scale=1, visible=True), *accordions, *list_texts, s]
 
 
 def set_new_docs_ui(documents):
@@ -52,6 +54,11 @@ def set_new_docs_ui(documents):
     return new_accordions, new_texts
 
 
+def clean_page():
+    docs.documents = []
+    accordions, list_texts = set_new_docs_ui(docs.documents)
+    return ["", [], None, *accordions, *list_texts]
+
 list_texts = []
 accordions = []
 states = []
@@ -63,12 +70,14 @@ with block:
     gr.Markdown("""
         <h1><center>Chat with Eur-Lex</center></h1>
     """)
+    state = gr.State(value=None)
     with gr.Row():
         with gr.Column(scale=3):
             chatbot = gr.Chatbot()
             with gr.Row():
                 message = gr.Textbox(scale=10)
                 submit = gr.Button("Send", scale=1)
+                clear = gr.Button("Clear", scale=1)
             
         with gr.Column(scale=1, visible=False) as col:
             gr.Markdown("""<h3><center>Context documents</center></h3>""")
@@ -80,10 +89,10 @@ with block:
                     states.append(gr.State(i))
                 accordions.append(acc)
     
-    state = gr.State(value=generate_random_string(7))
-    message.submit(get_answer, inputs=[message, chatbot, state], outputs=[message, chatbot, col, *accordions, *list_texts])
-    submit.click(get_answer, inputs=[message, chatbot, state], outputs=[message, chatbot, col, *accordions, *list_texts])
+    clear.click(clean_page, outputs=[message, chatbot, state, *accordions, *list_texts])
+    message.submit(get_answer, inputs=[message, chatbot, state], outputs=[message, chatbot, col, *accordions, *list_texts, state])
+    submit.click(get_answer, inputs=[message, chatbot, state], outputs=[message, chatbot, col, *accordions, *list_texts, state])
     for i, b in enumerate(delete_buttons):
-        b.click(remove_doc, inputs=states[i], outputs=[*accordions, *list_texts ])
+        b.click(remove_doc, inputs=states[i], outputs=[*accordions, *list_texts])
 
 block.launch(debug=True)
