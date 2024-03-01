@@ -10,6 +10,7 @@ vectorDB:
   class: Qdrant
   kwargs:
     port: 6333
+    url: http://qdrant
     collection_name: chat-eur-lex
 
 splitter:

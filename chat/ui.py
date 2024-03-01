@@ -3,6 +3,7 @@ from EurLexChat import EurLexChat
 import yaml
 import random
 import string
+import argparse
 
 def generate_random_string(length):
     # Generate a random string of the specified length 
@@ -15,7 +16,18 @@ class Documents():
     def __init__(self) -> None:
         self.documents = []
 
-with open('config.yaml', 'r') as file:
+parser = argparse.ArgumentParser(description="Chat-eur-lex ui")
+
+parser.add_argument('--config_path',
+                    dest='config_path',
+                    metavar='config_path',
+                    type=str,
+                    help='The path to the config file that contains all the settings for the chat engine' ,
+                    default='config.yaml')
+args = parser.parse_args()
+
+# Read config file
+with open(args.config_path, 'r') as file:
     config = yaml.safe_load(file)
 
 chat = EurLexChat(config=config)
