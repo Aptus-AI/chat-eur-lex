@@ -20,6 +20,7 @@ class EurLexChat:
             config["llm"]["class"] == "ChatOpenAI")
 
         self.embedder, self.llm, self.chatDB_class, self.retriever = get_init_modules(config)
+        self.max_context_size = config["llm"]["max_context_size"]
 
         self.prompt = ChatPromptTemplate.from_messages([
             ("system", SYSTEM_PROMPT),
@@ -45,9 +46,10 @@ class EurLexChat:
                 args_schema=ContextInput
             )
 
-            self.llm = self.llm.bind(tools=[convert_to_openai_tool(GET_CONTEXT_TOOL)])
+            # self.llm = self.llm.bind(tools=[convert_to_openai_tool(GET_CONTEXT_TOOL)])
+            self.llm_with_functions = self.llm.bind(tools=[convert_to_openai_tool(GET_CONTEXT_TOOL)])
             
-            chain = self.prompt | RunnableLambda(self._resize_history) | self.llm
+            chain = self.prompt | RunnableLambda(self._resize_history) | self.llm_with_functions
         else:
             chain = self.prompt | RunnableLambda(self._resize_history) | self.llm
         
@@ -201,6 +203,27 @@ class EurLexChat:
         return formatted_history
 
 
+    def _resize_context(self, context_docs:List[dict]) -> List[dict]:
+        """
+        Resize the dimension of the context in terms of number of tokens.
+        If the concatenation of document text exceeds max_context_size,
+        the document text is cut off to meet the limit.
+
+        Args:
+            context_docs (List[dict]): List of formatted documents.
+
+        Returns:
+            List[dict]: Returns the list of resized documents.
+        """
+        lengths = [self.llm.get_num_tokens(doc['text']) for doc in context_docs]
+        resized_contexts = []
+        total_len = 0
+        for i, l in enumerate(lengths):
+            if l + total_len <= self.max_context_size:
+                resized_contexts.append(context_docs[i])
+                total_len += l
+        return resized_contexts
+    
     def get_answer(self, session_id:str, question:str, context_docs:List[dict], from_tool:bool=False) -> Answer:
         """
         Get an answer to a question of a specific session, considering context documents and history messages.
@@ -216,7 +239,8 @@ class EurLexChat:
                 if those provided are insufficient to answer the question.
 
         """
-        context = self._format_context_docs(context_docs)
+        resized_docs = self._resize_context(context_docs)
+        context = self._format_context_docs(resized_docs)
 
         result = self.chain_with_history.invoke(
             {"context": context, "question": question},
