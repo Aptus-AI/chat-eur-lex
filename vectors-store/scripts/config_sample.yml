@@ -1,5 +1,3 @@
-data_path: '/data/'
-
 embeddings:
   class: OpenAIEmbeddings
   kwargs:
@@ -10,12 +8,12 @@ vectorDB:
   class: Qdrant
   kwargs:
     port: 6333
-    url: http://qdrant
+    url: http://qdrant:6333/
     collection_name: chat-eur-lex
 
 splitter:
   class: LineSplitter
   kwargs:
-    chunk_size: 20
-    chunk_overlap: 5
+    chunk_size: 10
+    chunk_overlap: 3
     separator: "\n"

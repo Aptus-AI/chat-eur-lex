@@ -6,3 +6,4 @@ transformers==4.37.2
 openai==1.12.0
 beautifulsoup4==4.12.3
 unstructured==0.11.8
+datasets==2.18.0

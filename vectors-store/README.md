@@ -1,15 +1,21 @@
 # Vectors Store Setup
 
-Run database trough docker-compose:
+To set up the vectors database, follow these steps:
 
-`docker-compose up -d`
+Run the database through Docker Compose:
+```sh
+cd vector-store
+docker-compose up -d
+```
 
 Index the documents inside the database:
 
-```console
-cd vector-store
+```sh
+# Build the Docker image for the database indexer.
 docker build -t db-indexer .
-docker run --rm --network qdrant_network -v /path/to/eurlex/data:/data/ -v /path/config/file:/app/config.yaml db-indexer
+
+# Run the indexer container with the necessary configurations.
+docker run --rm --network qdrant_network -v /path/config/file:/app/config.yaml db-indexer
 ```
 
-The path `/path/to/eurlex/data` must contain a list of txt files, where each file contains a parsed Eur-Lex document.
+The path `/path/config/file.yaml` must contain a YAML file containing the parameters for the pre-processing and indexing of the laws.

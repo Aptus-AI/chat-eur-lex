@@ -40,9 +40,9 @@ class EurLexChat:
             GET_CONTEXT_TOOL = StructuredTool.from_function(
                 func=self.get_context,
                 name="get_context",
-                description="To be used whenever the user changes the topic of the conversation and you need the context for the new topic. " +
-                "This function must not be called right after the user's first message of the user or if you already have the information to answer. " + 
-                "Use this function only when is strictly necessary",
+                description="To be used whenever the provided context is empty or the user changes the topic of the conversation and you need the context for the topic. " +
+                "This function must be called only when is strictly necessary. " +
+                "This function must not be called if you already have the information to answer the user. ",
                 args_schema=ContextInput
             )
 

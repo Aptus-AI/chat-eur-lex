@@ -5,10 +5,11 @@ vectorDB:
         collection_name: chat-eur-lex
 
     retriever_args: 
-        search_type: similarity_score_threshold
+        search_type: mmr
         search_kwargs: 
-            k: 5
-            score_threshold: 0.6
+            k: 10
+            fetch_k: 300
+            lambda_mult: 0.8
 
 embeddings: 
     class: OpenAIEmbeddings
@@ -20,10 +21,11 @@ embeddings:
 llm: 
     class: ChatOpenAI
     use_context_function: True
+    max_context_size: 6000
     kwargs:
         openai_api_key: [key]
         model_name: gpt-4
-        temperature: 0.0
+        temperature: 0.8
 
 
 chatDB:
