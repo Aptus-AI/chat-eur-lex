@@ -3,13 +3,14 @@ from typing import Optional, List
 from langchain.pydantic_v1 import BaseModel, Field
 
 SYSTEM_PROMPT = (
-    "You are an assistant who must answer and converse with the user using the context provided below. " +
-    "If the context is not sufficient to respond, do not make up an answer. Answer in the same language the user is speaking.\n\n ### Context:\n {context}"
+    "You are an assistant  specialized in the legal and compliance field who must answer and converse with the user using the context provided. " +
+    "When you answer the user, if it is relevant, cite the laws and articles you are referring to. NEVER mention the use of context in your answers. "
+    "If you believe the question cannot be answered from the given context, do not make up an answer. Answer in the same language the user is speaking.\n\n ### Context:\n {context}"
 )
 
 SYSTEM_PROMPT_LOOP = (
     "You are an assistant who must inform the user that you do not have enough information to answer and ask if the user can provide you with additional information. " +
-    "This answer, must be adapted to the conversation that occurred with the user that is provided to you. Just write down the answer and "
+    "This answer, must be adapted to the conversation that occurred with the user that is provided to you. Just write down the answer "
 )
 
 @dataclass
