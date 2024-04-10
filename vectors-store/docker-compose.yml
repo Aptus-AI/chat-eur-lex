@@ -9,3 +9,10 @@ services:
       - "6334:6334"
     volumes:
       - ./data/qdrant_storage:/qdrant/storage
+    networks:
+      - qdrant_network 
+
+networks:
+  qdrant_network:  
+    driver: bridge
+    name: qdrant_network

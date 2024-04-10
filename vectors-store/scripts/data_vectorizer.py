@@ -1,10 +1,11 @@
-from langchain_community.document_loaders import DirectoryLoader
 from langchain.text_splitter import CharacterTextSplitter
 from preprocessing_utils import remove_html_lines
 import argparse
 import yaml
-parser = argparse.ArgumentParser(description="Preprocessing Chat-eur-lex service")
+from langchain_core.documents import Document
+from datasets import load_dataset
 
+parser = argparse.ArgumentParser(description="Preprocessing Chat-eur-lex service")
 parser.add_argument('--config_path',
                     dest='config_path',
                     metavar='config_path',
@@ -13,11 +14,9 @@ parser.add_argument('--config_path',
                     default='config.yaml')
 args = parser.parse_args()
 
-
 # Read config file
 with open(args.config_path, 'r') as file:
     config = yaml.safe_load(file)
-
 
 # Dynamic import of embeddings and vectorDB modules
 mod_emb = __import__('langchain_community.embeddings', fromlist=[config["embeddings"]["class"]])
@@ -31,16 +30,17 @@ mod = __import__('langchain_community.embeddings', fromlist=[config["embeddings"
 embeddings_class = getattr(mod, config["embeddings"]["class"])
 embedder = embeddings_class(**config["embeddings"]["kwargs"])
 
-# Load and preprocess documents
-loader = DirectoryLoader(
-    config['data_path'],
-    glob="**/*.txt",
-    show_progress=True,
-    use_multithreading=True,
-    max_concurrency=8
-    )
+dataset = load_dataset("AptusAI/chat-eur-lex")
 
-docs = loader.load()
+docs = [
+    Document(
+        page_content=row.pop('text'),
+        metadata=row,
+    )
+    for key in dataset.keys()
+    for row in dataset[key]
+]
+
 for i in range(len(docs)):
     docs[i].page_content = remove_html_lines(docs[i].page_content)
 
@@ -70,7 +70,10 @@ else:
     splitter_class = getattr(mod_splitter, config["splitter"]["class"])
     text_splitter = splitter_class(**config["splitter"]["kwargs"])
 
+print('Chunking..')
 chunked_documents = text_splitter.split_documents(docs)
 
 # Embed chunk and store in the vectorDB
+print('Embed and index..')
 db = vectoreDB_class.from_documents(chunked_documents, embedder, **config["vectorDB"]["kwargs"])
+print('Completed')
