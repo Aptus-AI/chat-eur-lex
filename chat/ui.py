@@ -100,6 +100,20 @@ with block:
                     delete_buttons.append(btn)
                     states.append(gr.State(i))
                 accordions.append(acc)
+
+    with gr.Row():
+        with gr.Column(scale=3):
+            gr.HTML("""""")
+            gr.HTML("""<div>
+                    <h3>Disclaimer</h3>
+                    <p><a href="https://github.com/Aptus-AI/chat-eur-lex/">Chat-EUR-Lex prototype</a> is a limited risk AI system realized by the 
+                    <a href="https://www.igsg.cnr.it/en/">Institute of Legal Informatics and Judicial Systems (IGSG-CNR)</a> and <a href="https://www.aptus.ai/">Aptus.AI</a>. 
+                    The prototype is an AI chatbot, therefore you are interacting with a machine, not with a human person. The prototype uses OpenAI GPT-4 language model. </p>
+                    
+                    <p><a href="https://github.com/Aptus-AI/chat-eur-lex/">Chat-EUR-Lex project</a> is funded by the European Union within the framework of the NGI Search project under grant agreement No 101069364. 
+                    Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or European Commission.
+                    Contact us: <a href="mailto:chat-eur-lex@igsg.cnr.it">chat-eur-lex@igsg.cnr.it</a>.</p>
+                    </div>""")
     
     clear.click(clean_page, outputs=[message, chatbot, state, *accordions, *list_texts])
     message.submit(get_answer, inputs=[message, chatbot, state], outputs=[message, chatbot, col, *accordions, *list_texts, state])
