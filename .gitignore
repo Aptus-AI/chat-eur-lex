@@ -1,0 +1,6 @@
+/vectors-store/data/
+.idea/
+*__pycache__*
+/data/
+config.yaml
+*/output/
