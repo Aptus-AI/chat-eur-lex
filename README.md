@@ -1,14 +1,18 @@
-# Chat-EUR-Lex Project
+# Chat-EUR-Lex Project and Prototype
 
 This is the repository of the Chat-EUR-Lex project funded by [NGI Search](https://ngi-search-2nd-open-call.fundingbox.com/). The project aim is to improve the accessibility of EU laws, thus democratizing the availability of legal information for companies, lawyers, researchers and citizens. Navigating the complex legal terrain of [EUR-Lex](https://eur-lex.europa.eu/homepage.html) is not easy for citizens and companies, as the existing system requires a deep knowledge of legal jargon and categorizations. In this context, EUR-Lex is often difficult to use by non-experts.
 
-In Chat-EUR-Lex we want to develop a trustworthy AI-powered interface providing simplified explanations and ultimately fostering users' understanding of EU law. This information will be made available through an intuitive and easy-to-use conversational interface. This is how Chat-EUR-Lex will directly contribute to the realization of the EU's vision of promoting digital transformation, transparency and inclusion. 
+In Chat-EUR-Lex we want to develop a trustworthy chatbot interface to access EU legal documents, providing simplified explanations, and fostering users' understanding of EU law.
 
-The technologies underlying Chat-EUR-Lex are state-of-the-art AI techniques, such as Chat-Based Large Language Models (Chat LLMs) and Retrieval Augmented Generation (RAG).
-
-Duration: from September 2023 to September 2024.
+The main technology underlying Chat-EUR-Lex prototype is Retrieval Augmented Generation (RAG): 
+- [X] The legal documents are indexed in a vector DB; the user query is transformed into a semantic vector; the retriever looks into the vector DB for similar contents.
+- [X] An LLM gets both the user query and the context (inserted in a prompt template) and generates the response to the user. Therefore, the generated answer refers to the portions of legal documents retrieved, and LLM hallucinations are reduced.
+      
+User query examples: "Explains in a simple way what the right to be forgotten is as defined in the GDPR"; "In terms of organic production, what does in-conversion production unit mean?"; "Summarize and simplify Directive (EU) 2023/2225 of the European Parliament and of the Council on consumer credit agreements".
 
 Chat-EUR-Lex project is realized by the [Institute of Legal Informatics and Judicial Systems (IGSG-CNR)](https://www.igsg.cnr.it/en/) and the [Aptus.AI](https://www.aptus.ai/) startup.
+
+Duration: from September 2023 to September 2024.
 
 The project is funded by the European Union within the framework of the NGI Search project under grant agreement No 101069364 (NGI Search 2nd open call 2023). Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or European Commission. 
 
@@ -16,7 +20,7 @@ The project is funded by the European Union within the framework of the NGI Sear
 ## Roadmap
 
 - [X] **Requirements and use cases definition**. In this initial phase, the project team identifies the specific requirements for the Chat-EUR-Lex system. This includes understanding the target audience's needs, such as citizens, lawyers, researchers, and companies. The team also defines the use cases, outlining how the AI-powered interface will assist users in navigating and understanding EU laws.
-- [X]  **UX Research and Survey**. We collect data and information from a sample of potential users through a questionnaire, both in Italian and in English. Objective of the survey: understand the needs of people using digital legal resources, and their level of satisfaction; identify users needs and desires regarding chatbot interaction; know the fears related to the use of generative AI. User experience (UX) research involves studying how users interact with the current EUR-Lex system and identifying pain points and challenges. Link to the [English version of the questionnaire](https://79digsj2hiw.typeform.com/to/OaDO6yrx)
+- [X]  **UX Research and Survey**. We collect data and information from a sample of potential users through a questionnaire, both in Italian and in English. Objective of the survey: understand the needs of people using digital legal resources, and their level of satisfaction; identify users needs and desires regarding chatbot interaction; know the fears related to the use of generative AI. User experience (UX) research involves studying how users interact with the current EUR-Lex system and identifying pain points and challenges.
 - [X]  **Data collection and processing**. To power the AI system, a substantial amount of legal data from EUR-Lex is collected and processed (Italian and English languages).
 - [X] **UX Validation and Wireframing**. Based on the research, the team creates a prototype of the Chat-EUR-Lex interface, mapping out the layout and design elements to ensure a user-friendly experience. The wireframes and prototypes are tested with potential users to gather feedback and validate the user experience. This step helps ensure that the interface meets users' needs and expectations.
 - [X] **Semantic search engine setup**. Setting up a semantic search engine is a critical step. Semantic search allows users to find relevant legal information even if they don't use precise legal terminology. This involves using natural language processing (NLP) techniques to improve search accuracy.
