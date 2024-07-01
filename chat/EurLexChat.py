@@ -6,7 +6,7 @@ from langchain_core.tools import StructuredTool
 from langchain_core.utils.function_calling import convert_to_openai_tool
 from langchain_core.messages import AIMessage
 from typing import List
-from chat_utils import get_init_modules, SYSTEM_PROMPT, SYSTEM_PROMPT_LOOP, ContextInput, Answer
+from chat_utils import get_init_modules, SYSTEM_PROMPT, SYSTEM_PROMPT_LOOP, ContextInput, Answer, get_vectorDB_module
 from langchain_core.documents.base import Document
 
 
@@ -59,7 +59,7 @@ class EurLexChat:
             input_messages_key="question",
             history_messages_key="history",
         )
-        
+
         self.relevant_documents_pipeline = ( self.retriever | self._parse_documents )
 
 
@@ -270,3 +270,48 @@ class EurLexChat:
                 return Answer(answer=result.answer)        
         return Answer(answer=result.content)
 
+
+class EurLexChatAkn(EurLexChat):
+    def _parse_documents(self, docs: List[Document]) -> List[dict]:
+        """
+        Parse a list of documents into a standardized format.
+
+        Args:
+            docs (List[Document]): A list of documents to parse.
+
+        Returns:
+            List[dict]: A list of dictionaries, each containing parsed information from the input documents.
+        """
+
+        parsed_documents = []
+
+        for doc in docs:
+            parsed_documents.append({
+                'text': doc.page_content,
+                'source': doc.metadata["uri"],
+                '_id': doc.metadata["uri"] + doc.metadata["article_id"]
+            })
+        return parsed_documents
+
+    def get_relevant_docs(self, question: str, eurovoc: str = None) -> List[dict]:
+        """
+        Retrieve relevant documents based on a given question.
+
+        Args:
+            question (str): The question for which relevant documents are retrieved.
+            eurovoc (str): The Eurovoc to be used as filter
+
+        Returns:
+            List[dict]: A list of relevant documents.
+        """
+        if eurovoc:
+            retriever = get_vectorDB_module(
+                self.config['vectorDB'], self.embedder, metadata={'filter': {'eurovoc': ''}}
+            )
+            relevant_documents_pipeline_with_filter = (retriever | self._parse_documents)
+            docs = relevant_documents_pipeline_with_filter.invoke(
+                question
+            )
+        else:
+            docs = self.relevant_documents_pipeline.invoke(question)
+        return docs

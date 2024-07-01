@@ -64,7 +64,7 @@ def get_init_modules(config):
     return embedder, llm, chatDB_class, retriever
 
 
-def get_vectorDB_module(db_config, embedder):
+def get_vectorDB_module(db_config, embedder, metadata=None):
     mod_chat = __import__("langchain_community.vectorstores",
                           fromlist=[db_config["class"]])
     vectorDB_class = getattr(mod_chat, db_config["class"])
@@ -85,10 +85,13 @@ def get_vectorDB_module(db_config, embedder):
 
         client = QdrantClient(**client_kwargs)
 
+        if metadata is None:
+            metadata = {}
         retriever = vectorDB_class(
             client, embeddings=embedder, **db_kwargs).as_retriever(
                 search_type=db_config["retriever_args"]["search_type"],
-                search_kwargs=db_config["retriever_args"]["search_kwargs"]
+                search_kwargs={**db_config["retriever_args"]["search_kwargs"], **metadata},
+                filter=metadata
         )
 
     else:
