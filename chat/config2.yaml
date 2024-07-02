@@ -1,6 +1,8 @@
 vectorDB:
     class: Qdrant
     kwargs:
+        url: ""
+        api_key: ""
         port: 6333
         collection_name: chat-eur-lex
 
@@ -14,7 +16,8 @@ vectorDB:
 embeddings: 
     class: OpenAIEmbeddings
     kwargs:
-        openai_api_key: [key]
+        openai_api_key: ""
+        openai_organization: ""
         model: text-embedding-ada-002
 
 
@@ -23,11 +26,18 @@ llm:
     use_context_function: True
     max_context_size: 6000
     kwargs:
-        openai_api_key: [key]
+        openai_api_key: ""
+        openai_organization: ""
         model_name: gpt-4
         temperature: 0.8
 
 
+chatDB:
+    class: DynamoDBChatMessageHistory
+    kwargs:
+        table_name: ""
+        aws_access_key_id : ""
+        aws_secret_access_key: ""
 chatDB:
     class: FileChatMessageHistory
     kwargs:
