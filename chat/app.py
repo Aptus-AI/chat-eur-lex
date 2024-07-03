@@ -1,9 +1,8 @@
 import gradio as gr
 from EurLexChat import EurLexChat
-import yaml
 import random
 import string
-import argparse
+from config import CONFIG, UI_USER, UI_PWD
 
 def generate_random_string(length):
     # Generate a random string of the specified length 
@@ -16,21 +15,8 @@ class Documents():
     def __init__(self) -> None:
         self.documents = []
 
-parser = argparse.ArgumentParser(description="Chat-eur-lex ui")
 
-parser.add_argument('--config_path',
-                    dest='config_path',
-                    metavar='config_path',
-                    type=str,
-                    help='The path to the config file that contains all the settings for the chat engine' ,
-                    default='config.yaml')
-args = parser.parse_args()
-
-# Read config file
-with open(args.config_path, 'r') as file:
-    config = yaml.safe_load(file)
-
-chat = EurLexChat(config=config)
+chat = EurLexChat(config=CONFIG)
 docs = Documents()
 
 
@@ -93,7 +79,7 @@ with block:
             
         with gr.Column(scale=1, visible=False) as col:
             gr.Markdown("""<h3><center>Context documents</center></h3>""")
-            for i in range(config['vectorDB']['retriever_args']['search_kwargs']['k']):
+            for i in range(CONFIG['vectorDB']['retriever_args']['search_kwargs']['k']):
                 with gr.Accordion(label="", elem_id=f'accordion_{i}', open=False) as acc:
                     list_texts.append(gr.Textbox("", elem_id=f'text_{i}', show_label=False, lines=10))
                     btn = gr.Button(f"Remove document")
@@ -121,4 +107,4 @@ with block:
     for i, b in enumerate(delete_buttons):
         b.click(remove_doc, inputs=states[i], outputs=[*accordions, *list_texts])
 
-block.launch(debug=True)
+block.launch(debug=True, auth=(UI_USER, UI_PWD))

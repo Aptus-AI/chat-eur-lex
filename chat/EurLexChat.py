@@ -1,3 +1,4 @@
+import boto3
 from langchain_community.vectorstores import Qdrant
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.runnables.base import RunnableLambda
@@ -96,6 +97,14 @@ class EurLexChat:
         if self.config["chatDB"]["class"] == 'FileChatMessageHistory':
             file_path = f"{kwargs['output_path']}/{session_id}.json"
             return self.chatDB_class(file_path=file_path)
+        elif self.config["chatDB"]["class"] == 'DynamoDBChatMessageHistory':
+            table_name = kwargs["table_name"]
+            session = boto3.Session(aws_access_key_id=kwargs["aws_access_key_id"],
+                                    aws_secret_access_key=kwargs["aws_secret_access_key"],
+                                    region_name='eu-west-1')
+            return self.chatDB_class(session_id=session_id,
+                                     table_name=table_name,
+                                     boto3_session=session)
         else:
             return self.chatDB_class(session_id=session_id, **kwargs)
 

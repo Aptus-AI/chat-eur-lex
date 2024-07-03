@@ -1,6 +1,8 @@
 vectorDB:
     class: Qdrant
     kwargs:
+        url: ""
+        api_key: ""
         port: 6333
         collection_name: chat-eur-lex
 
@@ -14,7 +16,6 @@ vectorDB:
 embeddings: 
     class: OpenAIEmbeddings
     kwargs:
-        openai_api_key: [key]
         model: text-embedding-ada-002
 
 
@@ -23,7 +24,6 @@ llm:
     use_context_function: True
     max_context_size: 6000
     kwargs:
-        openai_api_key: [key]
         model_name: gpt-4
         temperature: 0.8
 
