@@ -29,7 +29,7 @@ llm:
 
 
 chatDB:
-    class: DynamoDBChatMessageHistory
+    class: FileChatMessageHistory
     kwargs:
         output_path: /path/to/chat-eur-lex/chat/output
 
