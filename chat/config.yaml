@@ -12,6 +12,14 @@ vectorDB:
             k: 10
             fetch_k: 300
             lambda_mult: 0.8
+    
+    rerank:
+        use_rerank: true
+        class: CohereRerank
+        kwargs:
+            cohere_api_key: ""
+            model: rerank-multilingual-v3.0
+            top_n: 5
 
 embeddings: 
     class: OpenAIEmbeddings
@@ -31,6 +39,6 @@ llm:
 chatDB:
     class: FileChatMessageHistory
     kwargs:
-        output_path: /path/to/chat-eur-lex/chat/output
+        output_path: /Users/davidecolla/Projects/ChatEurlexDavide/chat-eur-lex/chat/out/
 
 max_history_messages: 5
