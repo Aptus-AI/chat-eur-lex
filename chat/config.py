@@ -13,6 +13,7 @@ OPENAI_ORG_KEY = os.getenv("OPENAI_ORG_KEY", "")
 OPENAI_KEY = os.getenv("OPENAI_KEY", "")
 QDRANT_URL = os.getenv("url", CONFIG["vectorDB"]["kwargs"].get("url", ""))
 QDRANT_KEY = os.getenv("qdrant_key", CONFIG["vectorDB"]["kwargs"].get("api_key", ""))
+COHERE_KEY = os.getenv("cohere_api_key", CONFIG["vectorDB"]["rerank"]["kwargs"].get("cohere_api_key", ""))
 
 UI_USER = os.getenv("user", "admin")
 UI_PWD = os.getenv("pwd", "admin")
@@ -23,6 +24,7 @@ CONFIG["llm"]["kwargs"]["openai_api_key"] = OPENAI_KEY
 CONFIG["llm"]["kwargs"]["openai_organization"] = OPENAI_ORG_KEY
 CONFIG["vectorDB"]["kwargs"]["url"] = QDRANT_URL
 CONFIG["vectorDB"]["kwargs"]["api_key"] = QDRANT_KEY
+CONFIG["vectorDB"]["rerank"]["kwargs"]["cohere_api_key"] = COHERE_KEY
 
 # if the history should be stored on AWS DynamoDB
 # otherwise it will be stored on local FS to the output_path defined in the config.yaml file
