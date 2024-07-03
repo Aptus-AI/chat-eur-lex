@@ -39,6 +39,6 @@ llm:
 chatDB:
     class: FileChatMessageHistory
     kwargs:
-        output_path: /Users/davidecolla/Projects/ChatEurlexDavide/chat-eur-lex/chat/out/
+        output_path: /path/to/chat-eur-lex/chat/output
 
 max_history_messages: 5
