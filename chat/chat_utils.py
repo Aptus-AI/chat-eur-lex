@@ -100,15 +100,18 @@ def get_vectorDB_module(db_config, embedder, metadata=None):
             search_kwargs=db_config["retriever_args"]["search_kwargs"]
         )
 
-    if db_config["rerank"]["use_rerank"]:
-        from langchain.retrievers import ContextualCompressionRetriever
-        module_compressors = __import__("langchain.retrievers.document_compressors",
-                                    fromlist=[db_config["rerank"]["class"]])
-        rerank_class = getattr(module_compressors, db_config["rerank"]["class"])
-        rerank = rerank_class(**db_config["rerank"]["kwargs"])
-        retriever = ContextualCompressionRetriever(
-            base_compressor=rerank, 
-            base_retriever=retriever
-        )
+    if db_config.get("rerank"):
+        if db_config["rerank"]["class"] == "CohereRerank":
+            from langchain.retrievers import ContextualCompressionRetriever
+            module_compressors = __import__("langchain.retrievers.document_compressors",
+                                        fromlist=[db_config["rerank"]["class"]])
+            rerank_class = getattr(module_compressors, db_config["rerank"]["class"])
+            rerank = rerank_class(**db_config["rerank"]["kwargs"])
+            retriever = ContextualCompressionRetriever(
+                base_compressor=rerank,
+                base_retriever=retriever
+            )
+        else:
+            raise NotImplementedError(db_config["rerank"]["class"])
         
     return retriever

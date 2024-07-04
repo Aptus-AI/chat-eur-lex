@@ -14,7 +14,6 @@ vectorDB:
             lambda_mult: 0.8
     
     rerank:
-        use_rerank: false
         class: CohereRerank
         kwargs:
             cohere_api_key: ""
@@ -30,9 +29,9 @@ embeddings:
 llm: 
     class: ChatOpenAI
     use_context_function: True
-    max_context_size: 6000
+    max_context_size: 12000
     kwargs:
-        model_name: gpt-4
+        model_name: gpt-4o
         temperature: 0.8
 
 
