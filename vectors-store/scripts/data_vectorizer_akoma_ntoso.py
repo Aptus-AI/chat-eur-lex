@@ -225,8 +225,7 @@ print("Total tokens", np.sum(article_length_tokens))
 print("AVG chunk length (tokens)", np.mean(article_length_tokens))
 print("ST.d chunk length (tokens)", np.std(article_length_tokens))
 print("Median chunk length (tokens)", np.median(article_length_tokens))
-print(f"# texts over {threshold} tokens", np.sum(np.array(article_length_tokens) > 1000))
-print("text-embedding-ada-002 embedding cost", np.sum(article_length_tokens)/1000000 * 0.10)
+print(f"# texts over {threshold} tokens", np.sum(np.array(article_length_tokens) > threshold))
 
 # Create the VectorDB collection
 print('Embed and index...')
