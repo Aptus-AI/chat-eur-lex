@@ -24,12 +24,22 @@ CONFIG["llm"]["kwargs"]["openai_organization"] = OPENAI_ORG_KEY
 CONFIG["vectorDB"]["kwargs"]["url"] = QDRANT_URL
 CONFIG["vectorDB"]["kwargs"]["api_key"] = QDRANT_KEY
 
+
 # if the history should be stored on AWS DynamoDB
 # otherwise it will be stored on local FS to the output_path defined in the config.yaml file
 if CONFIG['chatDB']['class'] == 'DynamoDBChatMessageHistory':
-    CHATDB_TABLE_NAME = os.getenv("CHATDB_TABLE_NAME", CONFIG["chatDB"]["kwargs"].get("table_name", "ChatEurlexHistory"))
-    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", CONFIG["chatDB"]["kwargs"].get("aws_access_key_id", ""))
-    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", CONFIG["chatDB"]["kwargs"].get("aws_secret_access_key", ""))
+    CHATDB_TABLE_NAME = os.getenv("CHATDB_TABLE_NAME",
+                                  CONFIG["chatDB"]["kwargs"].get("table_name", "ChatEurlexHistory"))
+    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID",
+                                  CONFIG["chatDB"]["kwargs"].get("aws_access_key_id", ""))
+    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY",
+                                      CONFIG["chatDB"]["kwargs"].get("aws_secret_access_key", ""))
     CONFIG["chatDB"]["kwargs"]["table_name"] = CHATDB_TABLE_NAME
     CONFIG["chatDB"]["kwargs"]["aws_access_key_id"] = AWS_ACCESS_KEY_ID
     CONFIG["chatDB"]["kwargs"]["aws_secret_access_key"] = AWS_SECRET_ACCESS_KEY
+
+# if the Cohere reranking is enabled look for the api key and assign it to the CONFIG
+if CONFIG['vectorDB']['rerank']['use_rerank']:
+    COHERE_KEY = os.getenv("COHERE_API_KEY",
+                           CONFIG["vectorDB"]["rerank"]["kwargs"].get("cohere_api_key", ""))
+    CONFIG["vectorDB"]["rerank"]["kwargs"]["cohere_api_key"] = COHERE_KEY

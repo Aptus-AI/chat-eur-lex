@@ -12,6 +12,14 @@ vectorDB:
             k: 10
             fetch_k: 300
             lambda_mult: 0.8
+    
+    rerank:
+        use_rerank: false
+        class: CohereRerank
+        kwargs:
+            cohere_api_key: ""
+            model: rerank-multilingual-v3.0
+            top_n: 10
 
 embeddings: 
     class: OpenAIEmbeddings
