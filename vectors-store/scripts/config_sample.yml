@@ -1,3 +1,5 @@
+akoma_ntoso_dataset_path: path/to/akn/folder/3*.xml
+
 embeddings:
   class: OpenAIEmbeddings
   kwargs:
@@ -5,10 +7,11 @@ embeddings:
     model: "text-embedding-ada-002"
 
 vectorDB:
+  akn_document_token_size: 1000
   class: Qdrant
   kwargs:
     port: 6333
-    url: http://qdrant:6333/
+    url: http://qdrant
     collection_name: chat-eur-lex
 
 splitter:
