@@ -330,8 +330,6 @@ class EurLexChat:
         Get an answer to a question of a specific session, considering context documents and history messages.
         If ids_list is provided, any search for new context documents is filtered by the given IDs.
 
-
-
         Args:
             session_id (str): The session ID for which the answer is retrieved.
             question (str): The new user message.

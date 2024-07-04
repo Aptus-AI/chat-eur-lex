@@ -3,7 +3,6 @@ from EurLexChat import EurLexChat
 import random
 import string
 from config import CONFIG, UI_USER, UI_PWD
-import argparse
 from consts import JUSTICE_CELEXES, POLLUTION_CELEXES
 
 def generate_random_string(length):
@@ -83,17 +82,17 @@ block = gr.Blocks()
 with block:
 
     gr.Markdown("""
-        <h1><center>Chat with Eur-Lex</center></h1>
+        <h1><center>Chat-EUR-Lex prototype - Alpha version</center></h1>
     """)
     state = gr.State(value=None)
     with gr.Row():
         with gr.Column(scale=3):
-            radio = gr.Radio(choices=['justice','pollution'])
+            radio = gr.Radio(label='Choose a topic', choices=['justice','pollution'])
             chatbot = gr.Chatbot()
             with gr.Row():
-                message = gr.Textbox(scale=10)
-                submit = gr.Button("Send", scale=1)
-                clear = gr.Button("Clear", scale=1)
+                message = gr.Textbox(scale=10,label='',placeholder='Write a message...', container=False)
+                submit = gr.Button("Send message", scale=1)
+                clear = gr.Button("Reset chat", scale=1)
             
         with gr.Column(scale=1, visible=False) as col:
             gr.Markdown("""<h3><center>Context documents</center></h3>""")
