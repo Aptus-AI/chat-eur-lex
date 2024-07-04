@@ -3,6 +3,8 @@ from EurLexChat import EurLexChat
 import random
 import string
 from config import CONFIG, UI_USER, UI_PWD
+import argparse
+from consts import JUSTICE_CELEXES, POLLUTION_CELEXES
 
 def generate_random_string(length):
     # Generate a random string of the specified length 
@@ -17,6 +19,10 @@ class Documents():
 
 
 chat = EurLexChat(config=CONFIG)
+
+justice_ids = chat.get_ids_from_celexes(JUSTICE_CELEXES)
+pollution_ids = chat.get_ids_from_celexes(POLLUTION_CELEXES)
+
 docs = Documents()
 
 
@@ -26,12 +32,23 @@ def remove_doc(btn):
     return [*new_accordions, *new_texts]
 
 
-def get_answer(message, history, session_id):
+def get_answer(message, history, session_id, celex_type):
     s = session_id
+
+    if celex_type == 'justice':
+        ids_list = justice_ids
+    elif celex_type == 'pollution':
+        ids_list = pollution_ids
+    elif celex_type is None:
+        ids_list = []
+    else:
+        raise ValueError(f'Wrong celex_type: {celex_type}')
+
     if len(history) == 0:
-        docs.documents = chat.get_relevant_docs(question=message)
+        docs.documents = []
+        #docs.documents = chat.get_relevant_docs(question=message, ids_list=ids_list)
         s = generate_random_string(7)
-    result = chat.get_answer(s, message, docs.documents)
+    result = chat.get_answer(s, message, docs.documents, ids_list=ids_list) 
     history.append((message, result.answer))
     if result.new_documents:
         docs.documents = result.new_documents
@@ -44,7 +61,7 @@ def set_new_docs_ui(documents):
     new_texts = []
     for i in range(len(accordions)):
         if i < len(documents):
-            new_accordions.append(gr.update(accordions[i].elem_id, label=f"{documents[i]['text'][:45]}...", visible=True, open=False))
+            new_accordions.append(gr.update(accordions[i].elem_id, label=f"{documents[i]['celex']}: {documents[i]['text'][:40]}...", visible=True, open=False))
             new_texts.append(gr.update(list_texts[i].elem_id, value=f"{documents[i]['text']}...", visible=True))
         else:
             new_accordions.append(gr.update(accordions[i].elem_id, label="", visible=False))
@@ -71,6 +88,7 @@ with block:
     state = gr.State(value=None)
     with gr.Row():
         with gr.Column(scale=3):
+            radio = gr.Radio(choices=['justice','pollution'])
             chatbot = gr.Chatbot()
             with gr.Row():
                 message = gr.Textbox(scale=10)
@@ -102,8 +120,8 @@ with block:
                     </div>""")
     
     clear.click(clean_page, outputs=[message, chatbot, state, *accordions, *list_texts])
-    message.submit(get_answer, inputs=[message, chatbot, state], outputs=[message, chatbot, col, *accordions, *list_texts, state])
-    submit.click(get_answer, inputs=[message, chatbot, state], outputs=[message, chatbot, col, *accordions, *list_texts, state])
+    message.submit(get_answer, inputs=[message, chatbot, state, radio], outputs=[message, chatbot, col, *accordions, *list_texts, state])
+    submit.click(get_answer, inputs=[message, chatbot, state, radio], outputs=[message, chatbot, col, *accordions, *list_texts, state])
     for i, b in enumerate(delete_buttons):
         b.click(remove_doc, inputs=states[i], outputs=[*accordions, *list_texts])
 
