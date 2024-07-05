@@ -22,16 +22,9 @@ class EurLexChat:
             config["llm"]["use_context_function"] and
             config["llm"]["class"] == "ChatOpenAI")
 
-        self.embedder, self.llm, self.chatDB_class, self.retriever = get_init_modules(
+        self.embedder, self.llm, self.chatDB_class, self.retriever, retriever_chain = get_init_modules(
             config)
 
-        self.retriever = self.retriever.configurable_fields(
-            search_kwargs=ConfigurableField(
-                id="search_kwargs",
-                name="Search Kwargs",
-                description="The search kwargs to use. Includes dynamic category adjustment.",
-            )
-        )
 
         self.max_context_size = config["llm"]["max_context_size"]
 
@@ -82,7 +75,7 @@ class EurLexChat:
             history_messages_key="history",
         )
 
-        self.relevant_documents_pipeline = (self.retriever | self._parse_documents)
+        self.relevant_documents_pipeline = (retriever_chain | self._parse_documents)
 
     def _resize_history(self, input_dict):
         """
@@ -244,10 +237,10 @@ class EurLexChat:
 
             search_kwargs.update({'filter': filter})
             docs = self.relevant_documents_pipeline.invoke(
-                question,
+                {'question': question},
                 config={"configurable": {"search_kwargs": search_kwargs}})
         else:
-            docs = self.relevant_documents_pipeline.invoke(question)
+            docs = self.relevant_documents_pipeline.invoke({'question': question})
         return docs
 
     def get_context(self, text: str, ids_list:Optional[List[str]]=None) -> str:
@@ -409,7 +402,7 @@ class EurLexChatAkn(EurLexChat):
             List[dict]: A list of relevant documents.
         """
         if eurovoc:
-            retriever = get_vectorDB_module(
+            _, retriever = get_vectorDB_module(
                 self.config['vectorDB'], self.embedder, metadata={
                     'filter': {'eurovoc': ''}}
             )

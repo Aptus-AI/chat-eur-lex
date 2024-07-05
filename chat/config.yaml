@@ -5,11 +5,12 @@ vectorDB:
         api_key: ""
         port: 6333
         collection_name: chat-eur-lex
+        timeout: 60
 
     retriever_args: 
         search_type: mmr
         search_kwargs: 
-            k: 10
+            k: 100
             fetch_k: 300
             lambda_mult: 0.8
     
@@ -18,7 +19,7 @@ vectorDB:
         kwargs:
             cohere_api_key: ""
             model: rerank-multilingual-v3.0
-            top_n: 10
+            top_n: 15
 
 embeddings: 
     class: OpenAIEmbeddings
