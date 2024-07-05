@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional, List
 from langchain.pydantic_v1 import BaseModel, Field
+from langchain_core.runnables import ConfigurableField
+from langchain_core.runnables.base import RunnableLambda
+from operator import itemgetter
 
 SYSTEM_PROMPT = (
     "You are an assistant  specialized in the legal and compliance field who must answer and converse with the user using the context provided. " +
@@ -59,12 +62,11 @@ def get_init_modules(config):
     mod_chat = __import__("langchain_community.chat_message_histories",
                           fromlist=[config["chatDB"]["class"]])
     chatDB_class = getattr(mod_chat, config["chatDB"]["class"])
-    retriever = get_vectorDB_module(config['vectorDB'], embedder)
+    retriever, retriever_chain = get_vectorDB_module(config['vectorDB'], embedder)
 
-    return embedder, llm, chatDB_class, retriever
+    return embedder, llm, chatDB_class, retriever, retriever_chain
 
-
-def get_vectorDB_module(db_config, embedder, metadata=None):
+def get_vectorDB_module(db_config, embedder):
     mod_chat = __import__("langchain_community.vectorstores",
                           fromlist=[db_config["class"]])
     vectorDB_class = getattr(mod_chat, db_config["class"])
@@ -85,13 +87,10 @@ def get_vectorDB_module(db_config, embedder, metadata=None):
 
         client = QdrantClient(**client_kwargs)
 
-        if metadata is None:
-            metadata = {}
         retriever = vectorDB_class(
             client, embeddings=embedder, **db_kwargs).as_retriever(
                 search_type=db_config["retriever_args"]["search_type"],
-                search_kwargs={**db_config["retriever_args"]["search_kwargs"], **metadata},
-                filter=metadata
+                search_kwargs={**db_config["retriever_args"]["search_kwargs"]}
         )
 
     else:
@@ -100,18 +99,29 @@ def get_vectorDB_module(db_config, embedder, metadata=None):
             search_kwargs=db_config["retriever_args"]["search_kwargs"]
         )
 
+    retriever = retriever.configurable_fields(
+        search_kwargs=ConfigurableField(
+            id="search_kwargs",
+            name="Search Kwargs",
+            description="The search kwargs to use. Includes dynamic category adjustment.",
+        )
+    )
+
+    chain = ( RunnableLambda(lambda x: x['question']) | retriever)
+
     if db_config.get("rerank"):
         if db_config["rerank"]["class"] == "CohereRerank":
-            from langchain.retrievers import ContextualCompressionRetriever
             module_compressors = __import__("langchain.retrievers.document_compressors",
                                         fromlist=[db_config["rerank"]["class"]])
             rerank_class = getattr(module_compressors, db_config["rerank"]["class"])
             rerank = rerank_class(**db_config["rerank"]["kwargs"])
-            retriever = ContextualCompressionRetriever(
-                base_compressor=rerank,
-                base_retriever=retriever
-            )
+
+            chain = ({
+                "docs": chain,
+                "query": itemgetter("question"),
+                } | (RunnableLambda(lambda x: rerank.compress_documents(x['docs'], x['query'])))
+                    )
         else:
             raise NotImplementedError(db_config["rerank"]["class"])
-        
-    return retriever
+    return retriever, chain
+

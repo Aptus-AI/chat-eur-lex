@@ -78,6 +78,11 @@ accordions = []
 states = []
 delete_buttons = []
 
+if CONFIG['vectorDB'].get('rerank'):
+    n_context_docs = CONFIG['vectorDB']['rerank']['kwargs']['top_n']
+else:
+    n_context_docs = CONFIG['vectorDB']['retriever_args']['search_kwargs']['k']
+
 block = gr.Blocks()
 with block:
 
@@ -96,7 +101,7 @@ with block:
             
         with gr.Column(scale=1, visible=False) as col:
             gr.Markdown("""<h3><center>Context documents</center></h3>""")
-            for i in range(CONFIG['vectorDB']['retriever_args']['search_kwargs']['k']):
+            for i in range(n_context_docs):
                 with gr.Accordion(label="", elem_id=f'accordion_{i}', open=False) as acc:
                     list_texts.append(gr.Textbox("", elem_id=f'text_{i}', show_label=False, lines=10))
                     btn = gr.Button(f"Remove document")
