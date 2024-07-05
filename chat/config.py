@@ -39,7 +39,7 @@ if CONFIG['chatDB']['class'] == 'DynamoDBChatMessageHistory':
     CONFIG["chatDB"]["kwargs"]["aws_secret_access_key"] = AWS_SECRET_ACCESS_KEY
 
 # if the Cohere reranking is enabled look for the api key and assign it to the CONFIG
-if CONFIG['vectorDB']['rerank']['use_rerank']:
+if CONFIG['vectorDB'].get('rerank'):
     COHERE_KEY = os.getenv("COHERE_API_KEY",
                            CONFIG["vectorDB"]["rerank"]["kwargs"].get("cohere_api_key", ""))
     CONFIG["vectorDB"]["rerank"]["kwargs"]["cohere_api_key"] = COHERE_KEY
