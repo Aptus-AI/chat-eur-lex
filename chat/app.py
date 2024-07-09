@@ -5,7 +5,7 @@ import string
 from config import CONFIG, UI_USER, UI_PWD
 from consts import JUSTICE_CELEXES, POLLUTION_CELEXES
 from enum import Enum
-import regex as re
+from copy import deepcopy
 
 def generate_random_string(length):
     # Generate a random string of the specified length 
@@ -15,9 +15,12 @@ def generate_random_string(length):
     return random_string
 
 class ChatBot():
-    def __init__(self) -> None:
+    def __init__(self, config) -> None:
         self.documents = []
-        self.chat = EurLexChat(config=CONFIG)
+        self.config = deepcopy(config)
+        self.chat = EurLexChat(config=self.config)
+    def __deepcopy__(self, _):
+        return ChatBot(self.config)
 
 class Versions(Enum):
     AKN='Akoma Ntoso'
@@ -26,28 +29,26 @@ class Versions(Enum):
     BASIC='All eurovoc'
 
 
-bot = ChatBot()
+chat_init = EurLexChat(config=CONFIG)
+justice_ids = chat_init.get_ids_from_celexes(JUSTICE_CELEXES)
+pollution_ids = chat_init.get_ids_from_celexes(POLLUTION_CELEXES)
 
-justice_ids = bot.chat.get_ids_from_celexes(JUSTICE_CELEXES)
-pollution_ids = bot.chat.get_ids_from_celexes(POLLUTION_CELEXES)
 
-
-def reinit(version):
+def reinit(version, bot):
     bot.documents = []
+    config = deepcopy(CONFIG)
     if version == Versions.AKN.value:
-        CONFIG['vectorDB']['kwargs']['collection_name'] += "-akn"
-    else:
-        CONFIG['vectorDB']['kwargs']['collection_name'] = re.sub(r'-akn$', '', CONFIG['vectorDB']['kwargs']['collection_name'])
-    bot.chat = EurLexChat(config=CONFIG)
-    return clean_page()
+        config['vectorDB']['kwargs']['collection_name'] += "-akn"
+    bot.chat = EurLexChat(config=config)
+    return clean_page(bot)
 
-def remove_doc(btn):
+def remove_doc(btn, bot):
     bot.documents.pop(btn)
     new_accordions, new_texts = set_new_docs_ui(bot.documents)
-    return [*new_accordions, *new_texts]
+    return [*new_accordions, *new_texts, bot]
 
 
-def get_answer(message, history, session_id, celex_type):
+def get_answer(message, history, session_id, celex_type, bot):
     s = session_id
     if celex_type == Versions.JUSTICE.value:
         ids_list = justice_ids
@@ -67,7 +68,7 @@ def get_answer(message, history, session_id, celex_type):
     if result.new_documents:
         bot.documents = result.new_documents
     accordions, list_texts = set_new_docs_ui(bot.documents)
-    return ['', history, gr.Column(scale=1, visible=True), *accordions, *list_texts, s]
+    return ['', history, gr.Column(scale=1, visible=True), *accordions, *list_texts, s, bot]
 
 
 def set_new_docs_ui(documents):
@@ -83,10 +84,10 @@ def set_new_docs_ui(documents):
     return new_accordions, new_texts
 
 
-def clean_page():
+def clean_page(bot):
     bot.documents = []
     accordions, list_texts = set_new_docs_ui(bot.documents)
-    return ["", [], None, *accordions, *list_texts, gr.Column(visible=False)]
+    return ["", [], None, *accordions, *list_texts, gr.Column(visible=False), bot]
 
 list_texts = []
 accordions = []
@@ -104,6 +105,7 @@ with block:
     gr.Markdown("""
         <h1><center>Chat-EUR-Lex prototype - Alpha version</center></h1>
     """)
+    bot = gr.State(value=ChatBot(CONFIG))
     state = gr.State(value=None)
     with gr.Row():
         with gr.Column(scale=3):
@@ -138,11 +140,11 @@ with block:
                     Contact us: <a href="mailto:chat-eur-lex@igsg.cnr.it">chat-eur-lex@igsg.cnr.it</a>.</p>
                     </div>""")
     
-    drop_down.change(reinit, inputs=[drop_down], outputs=[message, chatbot, state, *accordions, *list_texts, col])
-    clear.click(clean_page, outputs=[message, chatbot, state, *accordions, *list_texts, col])
-    message.submit(get_answer, inputs=[message, chatbot, state, drop_down], outputs=[message, chatbot, col, *accordions, *list_texts, state])
-    submit.click(get_answer, inputs=[message, chatbot, state, drop_down], outputs=[message, chatbot, col, *accordions, *list_texts, state])
+    drop_down.change(reinit, inputs=[drop_down, bot], outputs=[message, chatbot, state, *accordions, *list_texts, col])
+    clear.click(clean_page, inputs=[bot], outputs=[message, chatbot, state, *accordions, *list_texts, col, bot])
+    message.submit(get_answer, inputs=[message, chatbot, state, drop_down, bot], outputs=[message, chatbot, col, *accordions, *list_texts, state, bot])
+    submit.click(get_answer, inputs=[message, chatbot, state, drop_down, bot], outputs=[message, chatbot, col, *accordions, *list_texts, state, bot])
     for i, b in enumerate(delete_buttons):
-        b.click(remove_doc, inputs=states[i], outputs=[*accordions, *list_texts])
+        b.click(remove_doc, inputs=[states[i],bot], outputs=[*accordions, *list_texts, bot])
 
 block.launch(debug=True, auth=(UI_USER, UI_PWD))
