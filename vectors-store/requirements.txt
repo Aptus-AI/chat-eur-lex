@@ -7,3 +7,7 @@ openai==1.12.0
 beautifulsoup4==4.12.3
 unstructured==0.11.8
 datasets==2.18.0
+spacy==3.7.5
+langchain==0.1.14
+tqdm==4.66.2
+tiktoken==0.6.0

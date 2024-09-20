@@ -1,8 +1,16 @@
+<<<<<<< HEAD
+# Chat-EUR-Lex Project
+
+This is the repository of the Chat-EUR-Lex project funded by [NGI Search](https://ngi-search-2nd-open-call.fundingbox.com/). The project aim is to improve the accessibility of EU laws, thus democratizing the availability of legal information for companies, lawyers, researchers and citizens. Navigating the complex legal terrain of [EUR-Lex](https://eur-lex.europa.eu/homepage.html) is not easy for citizens and companies, as the existing system requires a deep knowledge of legal jargon and categorizations. In this context, EUR-Lex is often difficult to use by non-experts.
+
+In Chat-EUR-Lex we want to develop a trustworthy AI-powered interface providing simplified explanations and ultimately fostering users' understanding of EU law. This information will be made available through an intuitive and easy-to-use conversational interface. This is how Chat-EUR-Lex will directly contribute to the realization of the EU's vision of promoting digital transformation, transparency and inclusion. 
+=======
 # Chat-EUR-Lex Project and Prototype
 
 This is the repository of the Chat-EUR-Lex project funded by [NGI Search](https://ngi-search-2nd-open-call.fundingbox.com/). The project aim is to improve the accessibility of EU laws, thus democratizing the availability of legal information for companies, lawyers, researchers and citizens. Navigating the complex legal terrain of [EUR-Lex](https://eur-lex.europa.eu/homepage.html) is not easy for citizens and companies, as the existing system requires a deep knowledge of legal jargon and categorizations. In this context, EUR-Lex is often difficult to use by non-experts.
 
 In Chat-EUR-Lex we want to develop a trustworthy chatbot interface to access EU legal documents, providing simplified explanations, and fostering users' understanding of EU law.
+>>>>>>> main
 
 The main technology underlying Chat-EUR-Lex prototype is Retrieval Augmented Generation (RAG): 
 - [X] The legal documents are indexed in a vector DB; the user query is transformed into a semantic vector; the retriever looks into the vector DB for similar contents.
@@ -13,6 +21,12 @@ User query examples: "Explains in a simple way what the right to be forgotten is
 Chat-EUR-Lex project is realized by the [Institute of Legal Informatics and Judicial Systems (IGSG-CNR)](https://www.igsg.cnr.it/en/) and the [Aptus.AI](https://www.aptus.ai/) startup.
 
 Duration: from September 2023 to September 2024.
+
+The project is funded by the European Union within the framework of the NGI Search project under grant agreement No 101069364 (NGI Search 2nd open call 2023). Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or European Commission. 
+
+Duration: from September 2023 to September 2024.
+
+Chat-EUR-Lex project is realized by the [Institute of Legal Informatics and Judicial Systems (IGSG-CNR)](https://www.igsg.cnr.it/en/) and the [Aptus.AI](https://www.aptus.ai/) startup.
 
 The project is funded by the European Union within the framework of the NGI Search project under grant agreement No 101069364 (NGI Search 2nd open call 2023). Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or European Commission. 
 

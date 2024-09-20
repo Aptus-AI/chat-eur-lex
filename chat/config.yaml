@@ -1,30 +1,38 @@
 vectorDB:
     class: Qdrant
     kwargs:
+        url: ""
+        api_key: ""
         port: 6333
         collection_name: chat-eur-lex
+        timeout: 60
 
     retriever_args: 
         search_type: mmr
         search_kwargs: 
-            k: 10
+            k: 100
             fetch_k: 300
             lambda_mult: 0.8
+    
+    rerank:
+        class: CohereRerank
+        kwargs:
+            cohere_api_key: ""
+            model: rerank-multilingual-v3.0
+            top_n: 15
 
 embeddings: 
     class: OpenAIEmbeddings
     kwargs:
-        openai_api_key: [key]
         model: text-embedding-ada-002
 
 
 llm: 
     class: ChatOpenAI
     use_context_function: True
-    max_context_size: 6000
+    max_context_size: 12000
     kwargs:
-        openai_api_key: [key]
-        model_name: gpt-4
+        model_name: gpt-4o
         temperature: 0.8
 
 
