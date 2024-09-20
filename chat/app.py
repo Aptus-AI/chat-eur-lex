@@ -103,7 +103,7 @@ block = gr.Blocks()
 with block:
 
     gr.Markdown("""
-        <h1><center>Chat-EUR-Lex prototype - Alpha version</center></h1>
+        <h1><center>Chat-EUR-Lex prototype - Beta version</center></h1>
     """)
     bot = gr.State(value=ChatBot(CONFIG))
     state = gr.State(value=None)
@@ -131,9 +131,9 @@ with block:
             gr.HTML("""""")
             gr.HTML("""<div>
                     <h3>Disclaimer</h3>
-                    <p><a href="https://github.com/Aptus-AI/chat-eur-lex/">Chat-EUR-Lex prototype</a> is a limited risk AI system realized by the 
-                    <a href="https://www.igsg.cnr.it/en/">Institute of Legal Informatics and Judicial Systems (IGSG-CNR)</a> and <a href="https://www.aptus.ai/">Aptus.AI</a>. 
-                    The prototype is an AI chatbot, therefore you are interacting with a machine, not with a human person. The prototype uses OpenAI GPT-4 language model. </p>
+                    <p><a href="https://github.com/Aptus-AI/chat-eur-lex/">Chat-EUR-Lex prototype</a> is a limited risk AI system realized by <a href="https://www.aptus.ai/">Aptus.AI</a> and the 
+                    <a href="https://www.igsg.cnr.it/en/">Institute of Legal Informatics and Judicial Systems (IGSG-CNR)</a>. 
+                    The prototype is an AI chatbot, therefore you are interacting with a machine, not with a human person. The prototype uses Aptus.AI RAG system and OpenAI GPT-4o language model. </p>
                     
                     <p><a href="https://github.com/Aptus-AI/chat-eur-lex/">Chat-EUR-Lex project</a> is funded by the European Union within the framework of the NGI Search project under grant agreement No 101069364. 
                     Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or European Commission.
