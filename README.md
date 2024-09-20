@@ -10,12 +10,6 @@ The main technology underlying Chat-EUR-Lex prototype is Retrieval Augmented Gen
       
 User query examples: "Explains in a simple way what the right to be forgotten is as defined in the GDPR"; "In terms of organic production, what does in-conversion production unit mean?"; "Summarize and simplify Directive (EU) 2023/2225 of the European Parliament and of the Council on consumer credit agreements".
 
-Chat-EUR-Lex project is realized by the [Institute of Legal Informatics and Judicial Systems (IGSG-CNR)](https://www.igsg.cnr.it/en/) and the [Aptus.AI](https://www.aptus.ai/) startup.
-
-Duration: from September 2023 to September 2024.
-
-The project is funded by the European Union within the framework of the NGI Search project under grant agreement No 101069364 (NGI Search 2nd open call 2023). Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or European Commission. 
-
 Duration: from September 2023 to September 2024.
 
 Chat-EUR-Lex project is realized by the [Institute of Legal Informatics and Judicial Systems (IGSG-CNR)](https://www.igsg.cnr.it/en/) and the [Aptus.AI](https://www.aptus.ai/) startup.
